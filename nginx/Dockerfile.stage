@@ -1,0 +1,14 @@
+FROM nginx:1.21.3-alpine
+
+COPY ./config/nginx.stage.conf /etc/nginx/nginx.conf
+
+RUN mkdir /etc/nginx/stage_sites_enabled
+RUN mkdir /etc/nginx/ssl
+
+COPY ./stage_sites_enabled/*.conf /etc/nginx/stage_sites_enabled/
+COPY ./ssl/stage/* /etc/nginx/ssl/
+
+EXPOSE 80
+EXPOSE 443
+
+CMD ["nginx", "-g", "daemon off;"]

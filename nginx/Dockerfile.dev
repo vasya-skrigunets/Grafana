@@ -1,0 +1,14 @@
+FROM nginx:latest
+
+COPY ./config/nginx.dev.conf /etc/nginx/nginx.conf
+
+RUN mkdir /etc/nginx/dev_sites_enabled
+RUN mkdir /etc/nginx/ssl
+
+COPY ./dev_sites_enabled/*.conf /etc/nginx/dev_sites_enabled/
+COPY ./ssl/dev/* /etc/nginx/ssl/
+
+EXPOSE 80
+EXPOSE 443
+
+CMD ["nginx", "-g", "daemon off;"]

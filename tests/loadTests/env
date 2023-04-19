@@ -1,0 +1,22 @@
+{
+    "ADMIN_URL": "https://dev.dev.skudrop.com",
+    "TENANT_URL": "https://test.dev.skudrop.com",
+    "PORTAL_URL": "https://test123.portal.dev.skudrop.com",
+
+    "ADMIN_EMAIL": "admin@example.com",
+    "ADMIN_PASSWORD": "admin",
+
+    "TENANT_EMAIL": "k6@example.com",
+    "TENANT_PASSWORD": "test",
+
+    "PORTAL_EMAIL": "admin@example.com",
+    "PORTAL_PASSWORD": "admin",
+
+    "REQUEST_TIMEOUT": 300000,
+
+    "RUN_RANDOMLY": false,
+
+    "DELAY_BETWEEN_REQUESTS": 60,
+
+    "DELAY_BETWEEN_ENDPOINTS": 300
+}
