@@ -16,20 +16,20 @@ services:
       - "443:443"
     depends_on:
       - django
-      - react
+      # - react
       - postgresql
 
-  react:
-    container_name: "react_dev"
-    restart: on-failure
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile.dev
-    env_file:
-      - ./environment/react.dev.env
-    volumes:
-      - "./frontend:/code"
-      - "./frontend/node_modules:/code/node_modules"
+  # react:
+  #   container_name: "react_dev"
+  #   restart: on-failure
+  #   build:
+  #     context: ./frontend
+  #     dockerfile: Dockerfile.dev
+  #   env_file:
+  #     - ./environment/react.dev.env
+  #   volumes:
+  #     - "./frontend:/code"
+  #     - "./frontend/node_modules:/code/node_modules"
 
   django:
     restart: always
@@ -57,81 +57,81 @@ services:
       postgresql:
         condition: service_healthy
 
-  worker_default:
-    container_name: "worker_default"
-    restart: always
-    build:
-      context: ./backend
-      dockerfile: Dockerfile.worker.default
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
-        compress: "true"
-        mode: "non-blocking"
-    env_file:
-      - ./environment/worker.dev.env
-      - ./environment/django.dev.env
-    volumes:
-      - "./backend:/code"
+  # worker_default:
+  #   container_name: "worker_default"
+  #   restart: always
+  #   build:
+  #     context: ./backend
+  #     dockerfile: Dockerfile.worker.default
+  #   logging:
+  #     driver: "json-file"
+  #     options:
+  #       max-size: "10m"
+  #       max-file: "3"
+  #       compress: "true"
+  #       mode: "non-blocking"
+  #   env_file:
+  #     - ./environment/worker.dev.env
+  #     - ./environment/django.dev.env
+  #   volumes:
+  #     - "./backend:/code"
 
-  worker_payments:
-    container_name: "worker_payments"
-    restart: always
-    build:
-      context: ./backend
-      dockerfile: Dockerfile.worker.payments
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
-        compress: "true"
-        mode: "non-blocking"
-    env_file:
-      - ./environment/worker.dev.env
-      - ./environment/django.dev.env
-    volumes:
-      - "./backend:/code"
+  # worker_payments:
+  #   container_name: "worker_payments"
+  #   restart: always
+  #   build:
+  #     context: ./backend
+  #     dockerfile: Dockerfile.worker.payments
+  #   logging:
+  #     driver: "json-file"
+  #     options:
+  #       max-size: "10m"
+  #       max-file: "3"
+  #       compress: "true"
+  #       mode: "non-blocking"
+  #   env_file:
+  #     - ./environment/worker.dev.env
+  #     - ./environment/django.dev.env
+  #   volumes:
+  #     - "./backend:/code"
 
-  worker_labels:
-    container_name: "worker_labels"
-    restart: always
-    build:
-      context: ./backend
-      dockerfile: Dockerfile.worker.labels
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
-        compress: "true"
-        mode: "non-blocking"
-    env_file:
-      - ./environment/worker.dev.env
-      - ./environment/django.dev.env
-    volumes:
-      - "./backend:/code"
+  # worker_labels:
+  #   container_name: "worker_labels"
+  #   restart: always
+  #   build:
+  #     context: ./backend
+  #     dockerfile: Dockerfile.worker.labels
+  #   logging:
+  #     driver: "json-file"
+  #     options:
+  #       max-size: "10m"
+  #       max-file: "3"
+  #       compress: "true"
+  #       mode: "non-blocking"
+  #   env_file:
+  #     - ./environment/worker.dev.env
+  #     - ./environment/django.dev.env
+  #   volumes:
+  #     - "./backend:/code"
 
-  worker_amazon:
-    container_name: "worker_amazon"
-    restart: always
-    build:
-      context: ./backend
-      dockerfile: Dockerfile.worker.amazon
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
-        compress: "true"
-        mode: "non-blocking"
-    env_file:
-      - ./environment/worker.dev.env
-      - ./environment/django.dev.env
-    volumes:
-      - "./backend:/code"
+  # worker_amazon:
+  #   container_name: "worker_amazon"
+  #   restart: always
+  #   build:
+  #     context: ./backend
+  #     dockerfile: Dockerfile.worker.amazon
+  #   logging:
+  #     driver: "json-file"
+  #     options:
+  #       max-size: "10m"
+  #       max-file: "3"
+  #       compress: "true"
+  #       mode: "non-blocking"
+  #   env_file:
+  #     - ./environment/worker.dev.env
+  #     - ./environment/django.dev.env
+  #   volumes:
+  #     - "./backend:/code"
 
   postgresql:
     container_name: "postgresql_dev"
@@ -208,10 +208,10 @@ services:
 
   loki:
     image: grafana/loki:latest
-    # volumes:
-    #   - ./loki/loki-config.yaml:/etc/loki/local-config.yaml
-    #   - /tmp/boltdb:/tmp/boltdb
-    #   - /tmp/chunks:/tmp/chunks
+    volumes:
+      - ./loki/loki-config.yaml:/etc/loki/local-config.yaml
+      - /tmp/boltdb:/tmp/boltdb
+      - /tmp/chunks:/tmp/chunks
     ports:
       - 3100:3100
     command: 

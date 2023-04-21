@@ -3,46 +3,48 @@ auth_enabled: false
 server:
   http_listen_port: 3100
 
-ingester:
-  wal:
-    enabled: true
-    dir: /tmp/wal
-  lifecycler:
-    address: 127.0.0.1
-    ring:
-      kvstore:
-        store: inmemory
-      replication_factor: 1
-    final_sleep: 0s
-  chunk_idle_period: 5m
-  max_chunk_age: 1h
-  chunk_target_size: 1048576
-  # chunk_retention_period: 30s
-  max_transfer_retries: 0
+common:
+  ring:
+    instance_addr: 127.0.0.1
+    kvstore:
+      store: memberlist
+  replication_factor: 1
+  path_prefix: /loki # Update this accordingly, data will be stored here.
+
+memberlist:
+  join_members:
+  # You can use a headless k8s service for all distributor, ingester and querier components.
+  - loki-gossip-ring.loki.svc.cluster.local:7946 # :7946 is the default memberlist port.
 
 schema_config:
   configs:
-    - from: 2021-09-01
-      store: boltdb
-      object_store: filesystem
-      schema: v11
-      index:
-        prefix: index_
-        period: 24h
+  - from: 2020-05-15
+    store: boltdb-shipper
+    object_store: s3
+    schema: v11
+    index:
+      prefix: index_
+      period: 24h
 
 storage_config:
-  boltdb:
-    directory: /tmp/boltdb
-  filesystem:
-    directory: /tmp/chunks
+  boltdb_shipper:
+    active_index_directory: /loki/index
+    cache_location: /loki/index_cache
+    shared_store: s3
+  aws:
+    s3:  s3://ACCESS_KEY:SECRET_ACCESS_KEY@REGION/BUCKET_NAME
+    s3forcepathstyle: true
 
 limits_config:
   reject_old_samples: true
-  reject_old_samples_max_age: 168h
+  reject_old_samples_max_age: 24h
 
 chunk_store_config:
   max_look_back_period: 0s
 
-table_manager:
-  retention_deletes_enabled: false
-  retention_period: 0s
+compactor:
+  compaction_interval: 1m
+  retention_enabled: true
+  retention_delete_delay: 2h
+  retention_delete_worker_count: 150
+  shared_store: s3
